@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ee4d2d">
+<title>Shopee HPP — Kalkulator Produk</title>
+<style>
+:root{--orange:#ee4d2d;--orange-dark:#d94324;--bg:#f5f5f5;--white:#fff;--text:#222;--muted:#888;--line:#eee;--green:#168a45;--red:#e04444}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+.topbar{background:var(--orange);color:#fff;padding:12px max(16px,calc((100% - 1160px)/2));}
+.topline{display:flex;justify-content:space-between;gap:12px;font-size:12px;opacity:.95;margin-bottom:22px}
+.top-main{display:flex;align-items:center;gap:20px}
+.logo{display:flex;align-items:center;gap:9px;font-size:25px;font-weight:800;white-space:nowrap}
+.bag{width:38px;height:38px;border:3px solid white;border-radius:8px;display:grid;place-items:center;font-size:22px;position:relative}
+.search{flex:1;display:flex;background:white;padding:4px;border-radius:3px;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.search input{flex:1;min-width:0;border:0;outline:0;padding:10px;font-size:14px;color:#333}
+.search button{border:0;background:var(--orange);color:#fff;border-radius:2px;padding:0 22px;font-size:18px;cursor:pointer}
+.cart{font-size:26px}
+.wrap{max-width:1160px;margin:22px auto;padding:0 16px}
+.breadcrumb{color:#777;font-size:12px;margin:0 0 16px}
+.hero{background:linear-gradient(110deg,#fff2ee,#fff);border-radius:5px;padding:28px 30px;display:flex;align-items:center;justify-content:space-between;gap:20px;border:1px solid #f8d7cf}
+.hero small{color:var(--orange);font-weight:bold;letter-spacing:1px}
+h1{font-size:clamp(27px,4vw,38px);margin:10px 0;color:#333}
+h1 span{color:var(--orange)}
+.hero p{color:#777;font-size:14px;line-height:1.7;max-width:620px;margin:0 0 18px}
+.promo{background:var(--orange);color:white;width:110px;height:110px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;font-size:48px;box-shadow:0 8px 18px #ee4d2d44}
+.primary-link{display:inline-block;text-decoration:none;background:var(--orange);color:white;padding:12px 20px;border-radius:3px;font-weight:bold;font-size:13px}
+.section-title{background:white;border-bottom:1px solid var(--line);padding:17px 20px;margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.section-title h2{font-size:18px;color:var(--orange);margin:0;font-weight:500}
+.tag{font-size:11px;color:var(--orange);background:#fff1ed;padding:7px 10px;border-radius:2px}
+.grid{display:grid;grid-template-columns:minmax(280px,.9fr) minmax(300px,1.1fr);gap:18px;margin-top:16px;align-items:start}
+.card{background:white;border-radius:4px;box-shadow:0 1px 3px #0000000d;border:1px solid #eee;padding:23px}
+.card h3{margin:0 0 7px;font-size:18px}.sub{font-size:12px;color:#999;line-height:1.6;margin:0 0 20px}
+label{display:block;font-size:13px;margin:16px 0 8px;color:#555}
+input[type=text],input[type=number]{width:100%;border:1px solid #ddd;border-radius:2px;padding:12px;font-size:14px;outline:0;background:white}
+input:focus{border-color:var(--orange)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hint{font-size:11px;color:#999;line-height:1.5;margin-top:8px}
+.submit{width:100%;border:0;border-radius:3px;background:var(--orange);color:white;font-weight:bold;padding:15px;margin-top:22px;cursor:pointer;font-size:14px}
+.submit:hover,.primary-link:hover{background:var(--orange-dark)}
+.error{background:#fff0ee;border:1px solid #ffccc3;color:#bb2d16;padding:11px;font-size:13px;margin-bottom:12px;border-radius:3px}
+.empty{min-height:325px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px}
+.empty-icon{width:70px;height:70px;border-radius:50%;display:grid;place-items:center;background:#fff0eb;color:var(--orange);font-size:32px;margin-bottom:16px}
+.empty h3{margin:0 0 8px}.empty p{font-size:13px;color:#999;line-height:1.7;max-width:280px;margin:0}
+.result-banner{background:linear-gradient(100deg,#ee4d2d,#ff704e);color:white;padding:22px;border-radius:3px;margin-bottom:13px}
+.result-banner .caption{font-size:11px;letter-spacing:1px;opacity:.9;text-transform:uppercase}
+.product-name{font-size:24px;font-weight:bold;margin:9px 0 15px;overflow-wrap:anywhere}
+.big{font-size:34px;font-weight:bold}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#fff;border:1px solid #eee;padding:16px;border-radius:3px;min-width:0}
+.stat-label{font-size:12px;color:#999;margin-bottom:9px}.stat-value{font-size:clamp(15px,2vw,19px);font-weight:bold;overflow-wrap:anywhere}
+.positive{color:var(--green)}.negative{color:var(--red)}
+.explain{font-size:11px;line-height:1.7;color:#999;margin:15px 2px 0}
+.tips{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:14px}
+.tip{background:white;border:1px solid #eee;padding:18px;border-radius:3px}
+.tip-icon{color:var(--orange);font-size:23px;margin-bottom:10px}.tip strong{font-size:13px;display:block;margin-bottom:7px}.tip p{color:#999;font-size:12px;line-height:1.6;margin:0}
+footer{background:white;margin-top:32px;padding:22px max(16px,calc((100% - 1128px)/2));display:flex;justify-content:space-between;gap:12px;color:#999;font-size:11px;border-top:1px solid #eee}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.empty{min-height:210px}.top-main{gap:12px}.logo{font-size:20px}.tips{grid-template-columns:1fr}}
+@media(max-width:560px){.topbar{padding:12px}.topline{font-size:10px;margin-bottom:15px}.top-main{gap:10px;flex-wrap:wrap}.logo{font-size:18px}.bag{width:32px;height:32px}.search{order:3;flex-basis:100%}.cart{margin-left:auto}.wrap{padding:0 11px;margin-top:14px}.hero{padding:22px 18px}.promo{width:64px;height:64px;font-size:30px}.hero p{font-size:13px}.card{padding:17px}.two{gap:8px}.section-title{padding:14px}.section-title h2{font-size:16px}footer{flex-direction:column}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topline"><span>Seller Centre &nbsp; | &nbsp; Mulai Berjualan &nbsp; | &nbsp; Download</span><span>Bantuan &nbsp; | &nbsp; Notifikasi</span></div>
+  <div class="top-main">
+    <div class="logo"><span class="bag">S</span><span>Shopee HPP</span></div>
+    <form class="search" id="searchForm"><input id="searchInput" type="text" placeholder="Cari produk atau hitung HPP..." aria-label="Cari"><button type="submit" aria-label="Cari">⌕</button></form>
+    <div class="cart" aria-label="Keranjang">🛒</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="breadcrumb">Beranda &nbsp; &gt; &nbsp; Peralatan Penjual &nbsp; &gt; &nbsp; Kalkulator HPP</div>
+  <section class="hero" id="beranda">
+    <div>
+      <small>KALKULATOR UNTUK PENJUAL</small>
+      <h1>Atur modal, <span>atur keuntungan!</span></h1>
+      <p>Hitung harga pokok penjualan (HPP), total modal, omzet, keuntungan, dan margin produk dengan mudah. Cocok untuk latihan mengelola toko online maupun usaha kecil.</p>
+      <a class="primary-link" href="#hitung">HITUNG HPP SEKARANG</a>
+    </div>
+    <div class="promo" aria-hidden="true">%</div>
+  </section>
+
+  <div class="section-title" id="hitung"><h2>🧾 Kalkulator HPP Produk</h2><span class="tag">GRATIS DIGUNAKAN</span></div>
+  <div class="grid">
+    <section class="card">
+      <h3>Masukkan Data Produk</h3>
+      <p class="sub">Lengkapi informasi di bawah untuk melihat hasil perhitungan.</p>
+      <div class="error" id="error" role="alert" hidden></div>
+      <form id="hppForm">
+        <label for="nama_produk">Nama Produk</label>
+        <input id="nama_produk" type="text" placeholder="Contoh: Kopi Susu" maxlength="100" required>
+        <label for="jumlah">Jumlah Produk (pcs)</label>
+        <input id="jumlah" type="number" min="1" step="1" placeholder="Contoh: 20" required>
+        <div class="two">
+          <div><label for="modal">Modal per Produk (Rp)</label><input id="modal" type="number" min="0" step="any" placeholder="Contoh: 13000" required></div>
+          <div><label for="jual">Harga Jual / Produk (Rp)</label><input id="jual" type="number" min="0" step="any" placeholder="Contoh: 20000" required></div>
+        </div>
+        <div class="hint">Masukkan modal dan harga jual untuk satu produk, bukan total semuanya.</div>
+        <button class="submit" type="submit">HITUNG SEKARANG</button>
+      </form>
+    </section>
+
+    <section class="card" id="hasil" aria-live="polite">
+      <div class="empty" id="emptyState">
+        <div class="empty-icon">🧾</div>
+        <h3>Hasil perhitungan</h3>
+        <p>Isi data produk lalu tekan tombol hitung. Ringkasan modal, omzet, dan keuntungan akan muncul di sini.</p>
+      </div>
+      <div id="result" hidden>
+        <div class="result-banner">
+          <div class="caption">Produk yang dihitung</div>
+          <div class="product-name" id="resultName"></div>
+          <div class="caption">HPP / modal per produk</div>
+          <div class="big" id="resultHpp"></div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="stat-label">Total Modal</div><div class="stat-value" id="totalModal"></div></div>
+          <div class="stat"><div class="stat-label">Omzet</div><div class="stat-value" id="omzet"></div></div>
+          <div class="stat"><div class="stat-label" id="profitLabel">Keuntungan</div><div class="stat-value" id="profit"></div></div>
+          <div class="stat"><div class="stat-label">Margin</div><div class="stat-value" id="margin"></div></div>
+          <div class="stat"><div class="stat-label">Jumlah</div><div class="stat-value" id="resultJumlah"></div></div>
+          <div class="stat"><div class="stat-label">Harga Jual / Produk</div><div class="stat-value" id="resultJual"></div></div>
+        </div>
+        <p class="explain">Keuntungan = omzet − total modal. Margin = keuntungan ÷ omzet × 100%. Biaya tambahan seperti ongkir, kemasan, dan biaya layanan belum dihitung.</p>
+      </div>
+    </section>
+  </div>
+
+  <div class="section-title" id="panduan"><h2>📌 Penjelasan Hasil</h2><span class="tag">PANDUAN SINGKAT</span></div>
+  <div class="tips">
+    <div class="tip"><div class="tip-icon">📦</div><strong>HPP / Modal Produk</strong><p>Modal yang dibutuhkan untuk satu produk. Total modal adalah modal per produk dikali jumlah produk.</p></div>
+    <div class="tip"><div class="tip-icon">💰</div><strong>Omzet Penjualan</strong><p>Total penjualan sebelum dikurangi modal, yaitu jumlah produk dikali harga jual.</p></div>
+    <div class="tip"><div class="tip-icon">📈</div><strong>Keuntungan</strong><p>Omzet dikurangi total modal. Hasil negatif berarti harga jual belum menutup modal.</p></div>
+  </div>
+</main>
+<footer><span>🛍️ Shopee HPP · Kalkulator Modal & Keuntungan</span><span>Desain belajar bertema marketplace, bukan situs resmi Shopee.</span></footer>
+
+<script>
+const form = document.getElementById("hppForm");
+const errorBox = document.getElementById("error");
+const emptyState = document.getElementById("emptyState");
+const result = document.getElementById("result");
+
+function rupiah(angka) {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency", currency: "IDR", maximumFractionDigits: 0
+  }).format(angka).replace(/\u00a0/g, " ");
+}
+function setText(id, value) {
+  document.getElementById(id).textContent = value;
+}
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+  errorBox.hidden = true;
+
+  const nama = document.getElementById("nama_produk").value.trim();
+  const jumlah = Number(document.getElementById("jumlah").value);
+  const modal = Number(document.getElementById("modal").value);
+  const jual = Number(document.getElementById("jual").value);
+
+  if (!nama) {
+    errorBox.textContent = "Nama produk harus diisi.";
+    errorBox.hidden = false;
+    return;
+  }
+  if (!Number.isInteger(jumlah) || jumlah < 1) {
+    errorBox.textContent = "Jumlah produk minimal 1.";
+    errorBox.hidden = false;
+    return;
+  }
+  if (!Number.isFinite(modal) || modal < 0 || !Number.isFinite(jual) || jual < 0) {
+    errorBox.textContent = "Modal dan harga jual harus berupa angka yang tidak negatif.";
+    errorBox.hidden = false;
+    return;
+  }
+
+  const totalModal = jumlah * modal;
+  const omzet = jumlah * jual;
+  const untung = omzet - totalModal;
+  const margin = omzet > 0 ? (untung / omzet) * 100 : 0;
+
+  setText("resultName", nama);
+  setText("resultHpp", rupiah(modal));
+  setText("totalModal", rupiah(totalModal));
+  setText("omzet", rupiah(omzet));
+  setText("profitLabel", untung >= 0 ? "Keuntungan" : "Kerugian");
+  setText("profit", untung < 0 ? rupiah(Math.abs(untung)) + " (rugi)" : rupiah(untung));
+  setText("margin", margin.toLocaleString("id-ID", {minimumFractionDigits: 1, maximumFractionDigits: 1}) + "%");
+  setText("resultJumlah", jumlah.toLocaleString("id-ID") + " pcs");
+  setText("resultJual", rupiah(jual));
+
+  document.getElementById("profit").className = "stat-value " + (untung >= 0 ? "positive" : "negative");
+  document.getElementById("margin").className = "stat-value " + (margin >= 0 ? "positive" : "negative");
+  emptyState.hidden = true;
+  result.hidden = false;
+  document.getElementById("hasil").scrollIntoView({behavior:"smooth", block:"start"});
+});
+
+document.getElementById("searchForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  if (q.includes("hitung") || q.includes("hpp") || q.includes("modal") || q.includes("produk") || q === "") {
+    document.getElementById("hitung").scrollIntoView({behavior:"smooth"});
+  } else {
+    document.getElementById("nama_produk").value = document.getElementById("searchInput").value.trim();
+    document.getElementById("nama_produk").focus();
+    document.getElementById("hitung").scrollIntoView({behavior:"smooth"});
+  }
+});
+</script>
+</body>
+</html>
